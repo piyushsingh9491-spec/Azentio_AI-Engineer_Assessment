@@ -4,9 +4,11 @@
     python -m remark.generate --seed 7 --drift --out data/drift/
 
 Split design (cannot be passed by memorisation):
-  * train/val use only "seen" templates and payee handles/entities;
+  * train uses a "seen" pool of templates and payee handles;
+  * ~30% of each class's val rows use templates/handles unseen in train, so
+    calibration and threshold choice see novel phrasings too;
   * ~30% of each class's test rows use templates AND handles/entities that
-    never appear in train/val (template_id is disjoint, so a reviewer can
+    never appear in train or val (template_id is disjoint, so a reviewer can
     recompute the held-out mask from the CSVs alone);
   * narrations are globally de-duplicated, so no exact string is in two splits.
 
@@ -35,7 +37,7 @@ SPLIT_COUNTS: dict[str, dict[str, int]] = {
     "val": {"BENIGN": 330, **{label: 25 for label in LABELS[1:]}},
     "test": {"BENIGN": 500, **{label: 40 for label in LABELS[1:]}},
 }
-HOLDOUT_TEST_FRACTION = 0.30
+NOVEL_FRACTION = 0.30  # share of val/test rows from templates unseen in earlier splits
 CHANNEL_WEIGHTS = {"UPI": 0.70, "IMPS": 0.18, "NEFT": 0.12}
 DRIFT_CHANNEL_WEIGHTS = {"UPI": 0.25, "IMPS": 0.60, "NEFT": 0.15}
 DRIFT_ROWS = 300
@@ -123,16 +125,32 @@ def _channel(rng: random.Random, weights: dict[str, float]) -> str:
     return rng.choices(list(weights), weights=list(weights.values()))[0]
 
 
-def make_row(label: str, holdout: bool, rng: random.Random, seen: set[str],
+# Template pools. "val_only" templates/handles are unseen in train, so val
+# contains new phrasings too and is an honest proxy for calibration and
+# threshold choice; "test_holdout" ones are unseen in train AND val.
+VAL_ONLY_TEMPLATES = 3
+VAL_ONLY_HANDLES = 2
+POOLS = ("train", "val_only", "test_holdout")
+
+
+def pool_material(spec: ClassSpec, pool: str) -> tuple[list[str], list[str], list[str], list[str]]:
+    """(templates, template_ids, handles, entities) for one pool."""
+    seen_ids, holdout_ids = template_ids(spec)
+    if pool == "test_holdout":
+        return spec.holdout_templates, holdout_ids, spec.holdout_handles, spec.holdout_entities
+    cut_t, cut_h = -VAL_ONLY_TEMPLATES, -VAL_ONLY_HANDLES
+    if pool == "val_only":
+        return (spec.seen_templates[cut_t:], seen_ids[cut_t:], spec.seen_handles[cut_h:],
+                spec.seen_entities)
+    return spec.seen_templates[:cut_t], seen_ids[:cut_t], spec.seen_handles[:cut_h], spec.seen_entities
+
+
+def make_row(label: str, pool: str, rng: random.Random, seen: set[str],
              weights: dict[str, float]) -> dict:
     spec = SPECS[label]
-    seen_ids, holdout_ids = template_ids(spec)
-    templates, ids = ((spec.holdout_templates, holdout_ids) if holdout
-                      else (spec.seen_templates, seen_ids))
-    handles = spec.holdout_handles if holdout else spec.seen_handles
+    templates, ids, handles, entities = pool_material(spec, pool)
     if label != "BENIGN" and rng.random() < PERSONAL_HANDLE_RATE:
-        handles = PERSONAL_HANDLES_HOLDOUT if holdout else PERSONAL_HANDLES_SEEN
-    entities = spec.holdout_entities if holdout else spec.seen_entities
+        handles = PERSONAL_HANDLES_HOLDOUT if pool == "test_holdout" else PERSONAL_HANDLES_SEEN
     while True:  # re-draw until the narration is globally unique
         k = rng.randrange(len(templates))
         channel = _channel(rng, weights)
@@ -151,12 +169,14 @@ def generate_splits(seed: int) -> dict[str, list[dict]]:
     rng = random.Random(seed)
     seen: set[str] = set()
     splits: dict[str, list[dict]] = {}
+    novel_pool = {"train": None, "val": "val_only", "test": "test_holdout"}
     for split, counts in SPLIT_COUNTS.items():
         rows = []
         for label in LABELS:
             n = counts[label]
-            n_holdout = round(n * HOLDOUT_TEST_FRACTION) if split == "test" else 0
-            rows += [make_row(label, i < n_holdout, rng, seen, CHANNEL_WEIGHTS) for i in range(n)]
+            n_novel = round(n * NOVEL_FRACTION) if novel_pool[split] else 0
+            rows += [make_row(label, novel_pool[split] if i < n_novel else "train", rng, seen,
+                              CHANNEL_WEIGHTS) for i in range(n)]
         rng.shuffle(rows)
         for i, row in enumerate(rows):
             row["txn_id"] = f"{split[:2].upper()}{seed:03d}{i:06d}"
@@ -184,7 +204,7 @@ def generate_drift(seed: int) -> list[dict]:
                    "narration": narration, "label": "IMPERSONATION_SCAM",
                    "template_id": f"DRF_{k:02d}"}
         else:
-            row = make_row("BENIGN", False, rng, seen, DRIFT_CHANNEL_WEIGHTS)
+            row = make_row("BENIGN", "train", rng, seen, DRIFT_CHANNEL_WEIGHTS)
         row["txn_id"] = f"DR{seed:03d}{i:06d}"
         rows.append(row)
     return rows
