@@ -1,0 +1,28 @@
+[project]
+name = "remark"
+version = "0.1.0"
+description = "Risky-payment narration classifier: TF-IDF baseline vs compact transformer, calibrated, served with FastAPI"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "scikit-learn>=1.3",
+  "joblib>=1.3",
+  "torch>=2.1",
+  "transformers>=4.40",
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "pydantic>=2.5",
+  "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[tool.setuptools]
+packages = ["remark"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not slow' -q"
+markers = ["slow: needs trained model artifacts on disk (run with -m slow)"]
