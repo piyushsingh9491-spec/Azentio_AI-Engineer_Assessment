@@ -24,5 +24,6 @@ packages = ["remark"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = "-m 'not slow' -q"
 markers = ["slow: needs trained model artifacts on disk (run with -m slow)"]
