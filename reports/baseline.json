@@ -6,12 +6,12 @@
       "recall": 0.73,
       "threshold": 0.9999999914267238
     },
-    "ece_after": 0.020586651277855538,
-    "ece_before": 0.1670031849148294,
+    "ece_after": 0.020586651277847208,
+    "ece_before": 0.167003184914829,
     "ece_bins": 10,
-    "nll_after": 0.12340479553837659,
-    "nll_before": 0.2534057174293861,
-    "temperature": 0.1125892193359893
+    "nll_after": 0.12340479553817833,
+    "nll_before": 0.2534057174293856,
+    "temperature": 0.1125892193362027
   },
   "model": "baseline",
   "test": {
@@ -123,6 +123,6 @@
       }
     }
   },
-  "train_seconds": 0.17,
+  "train_seconds": 0.46,
   "version": "baseline-d2771d88"
 }

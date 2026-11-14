@@ -2,8 +2,8 @@
   "model": "baseline",
   "model_version": "baseline-d2771d88",
   "n": 1000,
-  "p50_ms": 3.15,
-  "p95_ms": 4.11,
-  "p99_ms": 5.75,
-  "mean_ms": 3.29
+  "p50_ms": 8.74,
+  "p95_ms": 14.35,
+  "p99_ms": 22.15,
+  "mean_ms": 9.37
 }

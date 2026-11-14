@@ -21,11 +21,13 @@
 | A synthetic payee handle mimicked a real registered lender with a ".fake" suffix. | Review of `templates.py`. | Renamed to an invented brand. |
 | OOV threshold of 0.15 would have flagged the normal test set as drift (test has 30% new templates, OOV 0.149). | Measured PSI/OOV on val, test and the drift batch before choosing thresholds. | Threshold 0.25 (val 0.10, test 0.15, drift batch 0.41). |
 | A second transformer run (lr 2e-3, batch 16) diverged: loss stuck at ~1.80, val macro-F1 ~0.14. | Watched the epoch log. | Stopped it and kept the lr 1e-3 / batch 32 config that produced the reported run; artifacts and code match. |
+| Tests were only ever run as `python -m pytest`, which puts the repo root on `sys.path`; plain `pytest` (what reviewers run) failed with `No module named 'remark'`. | Running plain `pytest` on my own laptop. | Added `pythonpath = ["."]` to `[tool.pytest.ini_options]`; plain `pytest` now passes (37 tests). |
+| On a fresh Windows laptop `import torch` failed (`WinError 126`, `shm.dll`). | Local run. | Not a code bug: installed the Microsoft Visual C++ Redistributable; documented in the README. |
 | `starlette` deprecation warning for `HTTP_422_UNPROCESSABLE_ENTITY`. | pytest warnings summary. | Use the literal 422. |
 | The planned Hugging Face checkpoint could not be downloaded in the sandbox (network policy). | `curl` to huggingface.co returned 403. | Used the brief's alternative: a compact transformer trained from scratch — fully offline, no setup script. |
 
 ## What I verified by hand
 - Reports are produced by commands (`remark.train_baseline`, `remark.finetune`, `remark.compare`,
-  `remark.active_loop`); none are hand-written. Re-running with seed 42 reproduces the metrics.
+  `remark.active_loop`); none are hand-written. Re-running with seed 42 on my Windows laptop reproduced the baseline and active-learning numbers exactly.
 - The test split is only passed to `evaluate_on_test` / `calibration_on_test` (`remark/evaluate.py`);
   temperature, threshold and early stopping use val only.

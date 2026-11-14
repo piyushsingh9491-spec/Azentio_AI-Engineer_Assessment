@@ -5,24 +5,24 @@ temperature and threshold were fitted on `data/val.csv` only.
 
 | Metric | baseline | finetuned |
 |---|---:|---:|
-| Test macro-F1 | 0.961 | 0.640 |
-| Macro-F1, held-out templates | 0.866 | 0.348 |
-| Macro-F1, in-distribution | 1.000 | 0.774 |
-| Recall GAMBLING_BETTING | 0.875 | 0.475 |
-| Recall CRYPTO_P2P | 0.950 | 0.600 |
-| Recall LOAN_APP | 0.975 | 0.625 |
-| Recall IMPERSONATION_SCAM | 0.950 | 0.625 |
-| Recall MULE_TASK_JOB | 0.975 | 0.525 |
-| Temperature (fit on val) | 0.113 | 1.424 |
-| ECE before (10 bins) | 0.167 | 0.118 |
-| ECE after | 0.021 | 0.062 |
-| NLL before | 0.253 | 0.771 |
-| NLL after | 0.123 | 0.644 |
-| Alert threshold (val, >=90% risky recall) | 1.0000 | 0.1584 |
-| Test recall at threshold | 0.730 | 0.860 |
-| Test precision at threshold | 1.000 | 0.557 |
-| Alerts per 1,000 txns (test) | 208.6 | 441.4 |
-| p95 latency, ms (bench.py) | 4.11 | 7.06 |
+| Test macro-F1 | 0.961 | 0.626 |
+| Macro-F1, held-out templates | 0.866 | 0.327 |
+| Macro-F1, in-distribution | 1.000 | 0.766 |
+| Recall GAMBLING_BETTING | 0.875 | 0.500 |
+| Recall CRYPTO_P2P | 0.950 | 0.575 |
+| Recall LOAN_APP | 0.975 | 0.650 |
+| Recall IMPERSONATION_SCAM | 0.950 | 0.600 |
+| Recall MULE_TASK_JOB | 0.975 | 0.500 |
+| Temperature (fit on val) | 0.113 | 1.386 |
+| ECE before (10 bins) | 0.167 | 0.105 |
+| ECE after | 0.021 | 0.040 |
+| NLL before | 0.253 | 0.769 |
+| NLL after | 0.123 | 0.667 |
+| Alert threshold (val, >=90% risky recall) | 1.0000 | 0.1846 |
+| Test recall at threshold | 0.730 | 0.845 |
+| Test precision at threshold | 1.000 | 0.523 |
+| Alerts per 1,000 txns (test) | 208.6 | 461.4 |
+| p95 latency, ms (bench.py) | 14.35 | 12.39 |
 | Model size on disk, MB | 0.41 | 1.22 |
-| Training time, s (CPU) | 0.2 | 171.5 |
+| Training time, s (CPU) | 0.5 | 287.8 |
 | Parameters (total / trainable) | n/a (sparse linear) | 300,550 / 300,550 |
