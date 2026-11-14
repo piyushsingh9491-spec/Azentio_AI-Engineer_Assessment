@@ -2,7 +2,8 @@
 
     python -m remark.train_baseline [--data data/] [--models models/] [--reports reports/]
 
-Fits on train.csv only; writes models/baseline/ and reports/baseline.json.
+Fits on train.csv; temperature and alert threshold on val.csv; test.csv is
+only evaluated. Writes models/baseline/ and reports/baseline.json.
 """
 
 from __future__ import annotations
@@ -18,12 +19,14 @@ from sklearn.pipeline import FeatureUnion, Pipeline
 
 from remark.data import label_ids, load_split
 from remark.evaluate import (
-    REFERENCE_FILE, build_reference, data_fingerprint, evaluate_on_test, write_json,
+    REFERENCE_FILE, build_reference, calibrate_on_val, calibration_on_test, data_fingerprint,
+    evaluate_on_test, write_json,
 )
 from remark.models import BaselinePredictor
 from remark.text import normalize, word_tokens
 
-PARAMS = {"C": 10.0, "class_weight": "balanced", "char_ngrams": (2, 5), "min_df": 2}
+# C=1: val macro-F1 is flat over C in [0.3, 30], ties broken toward stronger regularisation.
+PARAMS = {"C": 1.0, "class_weight": "balanced", "char_ngrams": (2, 5), "min_df": 2}
 
 
 def build_pipeline() -> Pipeline:
@@ -58,12 +61,14 @@ def main(argv: list[str] | None = None) -> dict:
     predictor.meta = {"version": f"baseline-{data_fingerprint(args.data / 'train.csv')}",
                       "params": {k: list(v) if isinstance(v, tuple) else v
                                  for k, v in PARAMS.items()}}
+    calibrate_on_val(predictor, val)  # val only: temperature + alert threshold
     predictor.save(model_dir)
     write_json(build_reference(predictor, train), model_dir / REFERENCE_FILE)
 
     report = {"model": "baseline", "version": predictor.version,
               "train_seconds": round(train_seconds, 2),
-              "test": evaluate_on_test(predictor, test, [train, val])}
+              "test": evaluate_on_test(predictor, test, [train, val]),
+              "calibration": calibration_on_test(predictor, test)}
     write_json(report, args.reports / "baseline.json")
     t = report["test"]
     print(f"baseline test macro-F1 {t['macro_f1']:.4f} | held-out templates "

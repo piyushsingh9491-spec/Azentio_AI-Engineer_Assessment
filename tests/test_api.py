@@ -19,6 +19,8 @@ def test_score_contract(client):
     assert sum(body["probabilities"].values()) == pytest.approx(1.0, abs=1e-4)
     assert body["risk_score"] == pytest.approx(1 - body["probabilities"]["BENIGN"], abs=1e-5)
     assert body["label"] in LABELS and body["model_version"].startswith("baseline-")
+    assert 0 < body["threshold"] <= 1
+    assert body["alert"] == (body["risk_score"] >= body["threshold"])
 
 
 def test_obvious_cases_are_classified(client):
