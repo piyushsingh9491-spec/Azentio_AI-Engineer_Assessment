@@ -26,6 +26,8 @@ class ScoreResponse(BaseModel):
     probabilities: dict[str, float]
     risk_score: float
     model_version: str
+    threshold: float | None = Field(description="calibrated risk_score alert threshold (fitted on val)")
+    alert: bool | None = Field(description="risk_score >= threshold")
 
 
 class BatchRequest(BaseModel):

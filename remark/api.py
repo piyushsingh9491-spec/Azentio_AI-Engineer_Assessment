@@ -45,12 +45,15 @@ class Settings:
 def score(predictor: Predictor, items: list[ScoreRequest]) -> list[ScoreResponse]:
     probs = predictor.predict_proba([item.narration for item in items])
     risk = predictor.risk_score(probs)
+    threshold = predictor.threshold
     return [
         ScoreResponse(
             label=LABELS[int(row.argmax())],
             probabilities={label: round(float(p), 6) for label, p in zip(LABELS, row)},
             risk_score=round(float(r), 6),
             model_version=predictor.version,
+            threshold=threshold,
+            alert=None if threshold is None else bool(r >= threshold),
         )
         for row, r in zip(probs, risk)
     ]
