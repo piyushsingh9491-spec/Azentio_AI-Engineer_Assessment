@@ -43,3 +43,47 @@ class HealthResponse(BaseModel):
     status: str
     model: str
     model_version: str
+
+
+class ReviewItem(BaseModel):
+    txn_id: str
+    narration: str
+    channel: str
+    predicted_label: str
+    uncertainty: float = Field(description="entropy of the predicted distribution, in nats")
+
+
+class ReviewQueueResponse(BaseModel):
+    model_version: str
+    items: list[ReviewItem]
+
+
+class LabelRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    txn_id: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
+    label: Literal["BENIGN", "GAMBLING_BETTING", "CRYPTO_P2P", "LOAN_APP",
+                   "IMPERSONATION_SCAM", "MULE_TASK_JOB"]
+    analyst_id: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64,
+                                                 pattern=r"^[A-Za-z0-9_.\-]+$")]
+
+
+class LabelResponse(BaseModel):
+    id: int
+    txn_id: str
+    label: str
+    analyst_id: str
+    created_at: str
+
+
+class DriftRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    narrations: list[Narration] = Field(min_length=1, max_length=10_000)
+
+
+class DriftResponse(BaseModel):
+    n: int
+    psi: float
+    oov_rate: float
+    predicted_label_dist: dict[str, float]
+    thresholds: dict[str, float]
+    drift: bool
