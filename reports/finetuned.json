@@ -1,0 +1,138 @@
+{
+  "calibration": {
+    "alerting": {
+      "alerts_per_1000": 441.42857142857144,
+      "precision": 0.5566343042071198,
+      "recall": 0.86,
+      "threshold": 0.15844881534576416
+    },
+    "ece_after": 0.06212121039628981,
+    "ece_before": 0.1177787761603083,
+    "ece_bins": 10,
+    "nll_after": 0.6440920829772949,
+    "nll_before": 0.7707715034484863,
+    "temperature": 1.424040632938857
+  },
+  "checkpoint": "none (trained from scratch)",
+  "model": "finetuned",
+  "parameters": {
+    "total": 300550,
+    "trainable": 300550
+  },
+  "test": {
+    "confusion_matrix": {
+      "labels": [
+        "BENIGN",
+        "GAMBLING_BETTING",
+        "CRYPTO_P2P",
+        "LOAN_APP",
+        "IMPERSONATION_SCAM",
+        "MULE_TASK_JOB"
+      ],
+      "matrix": [
+        [
+          450,
+          18,
+          12,
+          3,
+          2,
+          15
+        ],
+        [
+          18,
+          19,
+          2,
+          0,
+          0,
+          1
+        ],
+        [
+          13,
+          2,
+          24,
+          0,
+          1,
+          0
+        ],
+        [
+          8,
+          0,
+          1,
+          25,
+          4,
+          2
+        ],
+        [
+          8,
+          1,
+          5,
+          1,
+          25,
+          0
+        ],
+        [
+          12,
+          5,
+          0,
+          1,
+          1,
+          21
+        ]
+      ]
+    },
+    "holdout_templates": {
+      "macro_f1": 0.3480172585435743,
+      "rows": 210
+    },
+    "in_distribution": {
+      "macro_f1": 0.7742232163793759,
+      "rows": 490
+    },
+    "macro_f1": 0.6402204059109159,
+    "per_class": {
+      "BENIGN": {
+        "f1": 0.8919722497522299,
+        "precision": 0.8840864440078585,
+        "recall": 0.9,
+        "support": 500
+      },
+      "CRYPTO_P2P": {
+        "f1": 0.5714285714285714,
+        "precision": 0.5454545454545454,
+        "recall": 0.6,
+        "support": 40
+      },
+      "GAMBLING_BETTING": {
+        "f1": 0.4470588235294118,
+        "precision": 0.4222222222222222,
+        "recall": 0.475,
+        "support": 40
+      },
+      "IMPERSONATION_SCAM": {
+        "f1": 0.684931506849315,
+        "precision": 0.7575757575757576,
+        "recall": 0.625,
+        "support": 40
+      },
+      "LOAN_APP": {
+        "f1": 0.7142857142857143,
+        "precision": 0.8333333333333334,
+        "recall": 0.625,
+        "support": 40
+      },
+      "MULE_TASK_JOB": {
+        "f1": 0.5316455696202531,
+        "precision": 0.5384615384615384,
+        "recall": 0.525,
+        "support": 40
+      }
+    }
+  },
+  "torch_threads": 2,
+  "train_seconds": 171.5,
+  "training": {
+    "best_epoch": 21,
+    "best_val_macro_f1": 0.7262707289541906
+  },
+  "version": "finetuned-d2771d88"
+}

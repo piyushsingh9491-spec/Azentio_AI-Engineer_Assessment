@@ -1,0 +1,9 @@
+{
+  "model": "finetuned",
+  "model_version": "finetuned-d2771d88",
+  "n": 1000,
+  "p50_ms": 5.32,
+  "p95_ms": 7.06,
+  "p99_ms": 9.96,
+  "mean_ms": 5.55
+}
