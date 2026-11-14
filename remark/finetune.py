@@ -35,10 +35,10 @@ from remark.text import normalize
 
 PAD, UNK, CLS = 0, 1, 2
 SPECIAL = ["[PAD]", "[UNK]", "[CLS]"]
-MAX_LEN = 192
+MAX_LEN = 96  # normalised narrations: p99 65 chars, max 72 on train
 HPARAMS = {"hidden_size": 128, "num_hidden_layers": 2, "num_attention_heads": 4,
-           "intermediate_size": 256, "lr": 1e-3, "batch_size": 32, "max_epochs": 40,
-           "patience": 6, "weight_decay": 0.01, "seed": 0}
+           "intermediate_size": 256, "lr": 1e-3, "batch_size": 32, "max_epochs": 30,
+           "patience": 5, "weight_decay": 0.01, "seed": 0}
 
 
 class CharTokenizer:
@@ -87,7 +87,7 @@ def train_step(model, optimizer, input_ids, attention_mask, labels, weights=None
     loss.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
     optimizer.step()
-    return float(loss)
+    return loss.item()
 
 
 class FinetunedPredictor(Predictor):
@@ -128,7 +128,7 @@ def fit_finetuned(train: pd.DataFrame, val: pd.DataFrame, log=print) -> tuple[Fi
     model = build_model(len(tokenizer.vocab))
     optimizer = torch.optim.AdamW(model.parameters(), lr=h["lr"], weight_decay=h["weight_decay"])
     x_ids, x_mask = tokenizer.encode(train["narration"].tolist())
-    y = torch.from_numpy(label_ids(train))
+    y = torch.from_numpy(label_ids(train).copy())
     weights = class_weights(label_ids(train))
     predictor = FinetunedPredictor(model, tokenizer)
     y_val = label_ids(val)
