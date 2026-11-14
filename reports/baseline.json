@@ -1,4 +1,18 @@
 {
+  "calibration": {
+    "alerting": {
+      "alerts_per_1000": 208.57142857142858,
+      "precision": 1.0,
+      "recall": 0.73,
+      "threshold": 0.9999999914267238
+    },
+    "ece_after": 0.020586651277855538,
+    "ece_before": 0.1670031849148294,
+    "ece_bins": 10,
+    "nll_after": 0.12340479553837659,
+    "nll_before": 0.2534057174293861,
+    "temperature": 0.1125892193359893
+  },
   "model": "baseline",
   "test": {
     "confusion_matrix": {
@@ -12,25 +26,25 @@
       ],
       "matrix": [
         [
-          495,
+          494,
+          1,
           0,
-          0,
-          0,
-          3,
-          2
+          1,
+          4,
+          0
         ],
         [
-          4,
-          36,
+          5,
+          35,
           0,
           0,
           0,
           0
         ],
         [
-          4,
+          2,
           0,
-          36,
+          38,
           0,
           0,
           0
@@ -44,11 +58,11 @@
           0
         ],
         [
-          6,
+          2,
           0,
           0,
           0,
-          34,
+          38,
           0
         ],
         [
@@ -62,53 +76,53 @@
       ]
     },
     "holdout_templates": {
-      "macro_f1": 0.8234043658005632,
+      "macro_f1": 0.8659620632001245,
       "rows": 210
     },
     "in_distribution": {
       "macro_f1": 1.0,
       "rows": 490
     },
-    "macro_f1": 0.9512311578306486,
+    "macro_f1": 0.9612778705828219,
     "per_class": {
       "BENIGN": {
-        "f1": 0.9792284866468842,
-        "precision": 0.9686888454011742,
-        "recall": 0.99,
+        "f1": 0.9830845771144279,
+        "precision": 0.9782178217821782,
+        "recall": 0.988,
         "support": 500
       },
       "CRYPTO_P2P": {
-        "f1": 0.9473684210526315,
+        "f1": 0.9743589743589743,
         "precision": 1.0,
-        "recall": 0.9,
+        "recall": 0.95,
         "support": 40
       },
       "GAMBLING_BETTING": {
-        "f1": 0.9473684210526315,
-        "precision": 1.0,
-        "recall": 0.9,
+        "f1": 0.9210526315789473,
+        "precision": 0.9722222222222222,
+        "recall": 0.875,
         "support": 40
       },
       "IMPERSONATION_SCAM": {
-        "f1": 0.8831168831168831,
-        "precision": 0.918918918918919,
-        "recall": 0.85,
+        "f1": 0.926829268292683,
+        "precision": 0.9047619047619048,
+        "recall": 0.95,
         "support": 40
       },
       "LOAN_APP": {
-        "f1": 0.9873417721518988,
-        "precision": 1.0,
+        "f1": 0.975,
+        "precision": 0.975,
         "recall": 0.975,
         "support": 40
       },
       "MULE_TASK_JOB": {
-        "f1": 0.9629629629629629,
-        "precision": 0.9512195121951219,
+        "f1": 0.9873417721518988,
+        "precision": 1.0,
         "recall": 0.975,
         "support": 40
       }
     }
   },
-  "train_seconds": 0.18,
-  "version": "baseline-75bf0a58"
+  "train_seconds": 0.17,
+  "version": "baseline-d2771d88"
 }
