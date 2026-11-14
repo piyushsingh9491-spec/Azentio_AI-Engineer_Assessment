@@ -1,0 +1,114 @@
+{
+  "model": "baseline",
+  "test": {
+    "confusion_matrix": {
+      "labels": [
+        "BENIGN",
+        "GAMBLING_BETTING",
+        "CRYPTO_P2P",
+        "LOAN_APP",
+        "IMPERSONATION_SCAM",
+        "MULE_TASK_JOB"
+      ],
+      "matrix": [
+        [
+          495,
+          0,
+          0,
+          0,
+          3,
+          2
+        ],
+        [
+          4,
+          36,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          36,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          39,
+          0,
+          0
+        ],
+        [
+          6,
+          0,
+          0,
+          0,
+          34,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          39
+        ]
+      ]
+    },
+    "holdout_templates": {
+      "macro_f1": 0.8234043658005632,
+      "rows": 210
+    },
+    "in_distribution": {
+      "macro_f1": 1.0,
+      "rows": 490
+    },
+    "macro_f1": 0.9512311578306486,
+    "per_class": {
+      "BENIGN": {
+        "f1": 0.9792284866468842,
+        "precision": 0.9686888454011742,
+        "recall": 0.99,
+        "support": 500
+      },
+      "CRYPTO_P2P": {
+        "f1": 0.9473684210526315,
+        "precision": 1.0,
+        "recall": 0.9,
+        "support": 40
+      },
+      "GAMBLING_BETTING": {
+        "f1": 0.9473684210526315,
+        "precision": 1.0,
+        "recall": 0.9,
+        "support": 40
+      },
+      "IMPERSONATION_SCAM": {
+        "f1": 0.8831168831168831,
+        "precision": 0.918918918918919,
+        "recall": 0.85,
+        "support": 40
+      },
+      "LOAN_APP": {
+        "f1": 0.9873417721518988,
+        "precision": 1.0,
+        "recall": 0.975,
+        "support": 40
+      },
+      "MULE_TASK_JOB": {
+        "f1": 0.9629629629629629,
+        "precision": 0.9512195121951219,
+        "recall": 0.975,
+        "support": 40
+      }
+    }
+  },
+  "train_seconds": 0.18,
+  "version": "baseline-75bf0a58"
+}
