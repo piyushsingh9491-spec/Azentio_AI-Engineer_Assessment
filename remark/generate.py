@@ -23,7 +23,8 @@ from pathlib import Path
 
 from remark.labels import LABELS, MAX_NARRATION_LEN
 from remark.templates import (
-    ABBREVIATIONS, BANK_CODES, DRIFT_HANDLES, DRIFT_TEMPLATES, MONTHS, NAMES, SPECS, ClassSpec,
+    ABBREVIATIONS, BANK_CODES, DRIFT_HANDLES, DRIFT_TEMPLATES, MONTHS, NAMES,
+    PERSONAL_HANDLES_HOLDOUT, PERSONAL_HANDLES_SEEN, SPECS, ClassSpec,
 )
 
 COLUMNS = ["txn_id", "channel", "amount", "narration", "label", "template_id"]
@@ -38,6 +39,7 @@ HOLDOUT_TEST_FRACTION = 0.30
 CHANNEL_WEIGHTS = {"UPI": 0.70, "IMPS": 0.18, "NEFT": 0.12}
 DRIFT_CHANNEL_WEIGHTS = {"UPI": 0.25, "IMPS": 0.60, "NEFT": 0.15}
 DRIFT_ROWS = 300
+PERSONAL_HANDLE_RATE = 0.3  # risky payments sent to an ordinary-looking personal handle
 
 
 def template_ids(spec: ClassSpec) -> tuple[list[str], list[str]]:
@@ -128,6 +130,8 @@ def make_row(label: str, holdout: bool, rng: random.Random, seen: set[str],
     templates, ids = ((spec.holdout_templates, holdout_ids) if holdout
                       else (spec.seen_templates, seen_ids))
     handles = spec.holdout_handles if holdout else spec.seen_handles
+    if label != "BENIGN" and rng.random() < PERSONAL_HANDLE_RATE:
+        handles = PERSONAL_HANDLES_HOLDOUT if holdout else PERSONAL_HANDLES_SEEN
     entities = spec.holdout_entities if holdout else spec.seen_entities
     while True:  # re-draw until the narration is globally unique
         k = rng.randrange(len(templates))
