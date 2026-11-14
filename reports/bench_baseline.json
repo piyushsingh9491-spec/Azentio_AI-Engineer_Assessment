@@ -1,0 +1,9 @@
+{
+  "model": "baseline",
+  "model_version": "baseline-75bf0a58",
+  "n": 1000,
+  "p50_ms": 2.62,
+  "p95_ms": 3.4,
+  "p99_ms": 5.02,
+  "mean_ms": 2.77
+}
