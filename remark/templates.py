@@ -202,6 +202,13 @@ DRIFT_HANDLES: list[str] = [
     "ed.compliance@navipay", "powergrid.notice@superyes",
 ]
 
+# Personal-looking handles that mules and scammers also receive money on, so a
+# payee handle alone is not a giveaway (seen vs holdout, like everything else).
+PERSONAL_HANDLES_SEEN: list[str] = [
+    "rohit.k99@okaxis", "pooja.s@ybl", "deepak1987@paytm", "kavya.r@oksbi", "arjun.m@ibl",
+]
+PERSONAL_HANDLES_HOLDOUT: list[str] = ["meera.j@okicici", "ravi.t2020@axl"]
+
 NAMES = ["rahul", "priya", "amit", "neha", "sunil", "pooja", "vikas", "anita", "rohit", "kavya",
          "arjun", "meera", "deepak", "sneha", "ravi"]
 MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
